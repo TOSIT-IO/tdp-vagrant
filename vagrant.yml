@@ -1,0 +1,14 @@
+---
+# Run "vagrant reload" when box is modified
+box: centos/7
+
+# Cluster VMs' ip, hostname, domain, cpus and memory (generates VM deployment config)
+hosts:
+  # |------ip-------|-hostname-|domain|cpus|memory|
+  - ["192.168.56.10", edge-01, tdp, 2, 2048]
+  - ["192.168.56.11", master-01, tdp, 3, 3072]
+  - ["192.168.56.12", master-02, tdp, 3, 3072]
+  - ["192.168.56.13", master-03, tdp, 3, 3072]
+  - ["192.168.56.14", worker-01, tdp, 2, 2048]
+  - ["192.168.56.15", worker-02, tdp, 2, 2048]
+  - ["192.168.56.16", worker-03, tdp, 2, 2048]

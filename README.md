@@ -36,6 +36,8 @@ export VAGRANT_DEFAULT_PROVIDER=libvirt
 vagrant up
 ```
 
+**Important:** The Vagrantfile create an internal network so you must not run Vagrant in parallel because the internal network can be created multiple times leading to undefined behavior. With the Libvirt provider, VMs are launch in parallel so, if you want speed, use Libvirt provider.
+
 ## Connect to machine
 
 ```bash

@@ -12,12 +12,33 @@ else
 end
 settings = config_file
 
+# Helper functions
+def destructure_host_dict(dict)
+  dict.values_at("ip", "hostname", "cpus", "memory")
+end
+
+
+domain = settings["domain"]
+
+# define groups and hostvars for ansible provisionner
+ansible_configuration = settings["hosts"].each_with_object({"hostvars": {}, "groups": Hash.new {|hash, key| hash[key] = []}}) do |host, configuration|
+  ip, hostname, cpus, memory = destructure_host_dict(host)
+  configuration[:hostvars][hostname] = {
+    :ip     => ip,
+    :domain => domain,
+  }
+  host.fetch("groups", []).each do |group|
+    configuration[:groups][group] << host["hostname"]
+  end # end group
+end # end configuration
+
+
 Vagrant.configure("2") do |config|
   config.vm.box = settings["box"]
   config.vm.synced_folder "./", "/vagrant", type: "rsync", rsync__auto: true, rsync__exclude: ['files/*.tar.gz', 'files/*.tgz', 'collections/', 'group_vars/', 'logs/', 'roles/', 'inventory/']
 
-  settings["hosts"].each do |host_data|
-    ip, hostname, domain, cpus, memory = *host_data
+  settings["hosts"].each do |host|
+    ip, hostname, cpus, memory = destructure_host_dict(host)
     config.vm.define hostname, autostart: true do |cfg|
       cfg.vm.hostname = hostname
       cfg.vm.network "private_network", ip: ip
@@ -31,17 +52,12 @@ Vagrant.configure("2") do |config|
         libvirt.cpus = cpus
         libvirt.memory = memory
       end # end provider libvirt
-
     end # end define
   end # end settings
 
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "#{vagrantfile_dir}/ping.yml"
-    ansible.host_vars = settings["hosts"].each_with_object ({}) do |(ip, hostname, domain, cpus, memory), dict|
-      dict[hostname] = {
-        :ip     => ip,
-        :domain => domain,
-      }
-    end # end host_vars
+    ansible.host_vars = ansible_configuration[:hostvars]
+    ansible.groups = ansible_configuration[:groups]
   end # end provision
 end

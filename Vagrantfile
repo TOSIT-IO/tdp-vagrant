@@ -14,7 +14,7 @@ settings = config_file
 
 Vagrant.configure("2") do |config|
   config.vm.box = settings["box"]
-  config.vm.synced_folder "./", "/vagrant", type: "rsync", rsync__auto: true, rsync__exclude: ['files/*.tar.gz', 'files/*.tgz', 'collections/', 'group_vars/', 'logs/', 'roles/']
+  config.vm.synced_folder "./", "/vagrant", type: "rsync", rsync__auto: true, rsync__exclude: ['files/*.tar.gz', 'files/*.tgz', 'collections/', 'group_vars/', 'logs/', 'roles/', 'inventory/']
 
   settings["hosts"].each do |host_data|
     ip, hostname, domain, cpus, memory = *host_data

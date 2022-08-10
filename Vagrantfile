@@ -14,7 +14,7 @@ settings = config_file
 
 # Helper functions
 def destructure_host_dict(dict)
-  dict.values_at("ip", "hostname", "cpus", "memory")
+  dict.values_at("ip", "hostname", "cpus", "memory", "box")
 end
 
 
@@ -22,7 +22,7 @@ domain = settings["domain"]
 
 # define groups and hostvars for ansible provisionner
 ansible_configuration = settings["hosts"].each_with_object({"hostvars": {}, "groups": Hash.new {|hash, key| hash[key] = []}}) do |host, configuration|
-  ip, hostname, cpus, memory = destructure_host_dict(host)
+  ip, hostname, cpus, memory, box = destructure_host_dict(host)
   configuration[:hostvars][hostname] = {
     :ip     => ip,
     :domain => domain,
@@ -34,12 +34,13 @@ end # end configuration
 
 
 Vagrant.configure("2") do |config|
-  config.vm.box = settings["box"]
   config.vm.synced_folder "./", "/vagrant", disabled: true
 
   settings["hosts"].each do |host|
-    ip, hostname, cpus, memory = destructure_host_dict(host)
+    ip, hostname, cpus, memory, box = destructure_host_dict(host)
+    box ||= settings["box"]
     config.vm.define hostname, autostart: true do |cfg|
+      cfg.vm.box = box
       cfg.vm.hostname = hostname
       cfg.vm.network "private_network", ip: ip
 

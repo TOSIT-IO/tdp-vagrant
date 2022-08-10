@@ -35,7 +35,7 @@ end # end configuration
 
 Vagrant.configure("2") do |config|
   config.vm.box = settings["box"]
-  config.vm.synced_folder "./", "/vagrant", type: "rsync", rsync__auto: true, rsync__exclude: ['files/*.tar.gz', 'files/*.tgz', 'collections/', 'group_vars/', 'logs/', 'roles/', 'inventory/']
+  config.vm.synced_folder "./", "/vagrant", disabled: true
 
   settings["hosts"].each do |host|
     ip, hostname, cpus, memory = destructure_host_dict(host)

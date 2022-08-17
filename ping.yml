@@ -2,6 +2,7 @@
 - hosts: all
   gather_facts: no
   become: no
+  strategy: linear
   tasks:
     - name: ping
       ping:

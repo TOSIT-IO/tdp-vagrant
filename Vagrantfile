@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
   end # end settings
 
   config.vm.provision :ansible do |ansible|
-    ansible.playbook = "#{vagrantfile_dir}/ping.yml"
+    ansible.playbook = "#{vagrantfile_dir}/provision.yml"
     ansible.host_vars = ansible_configuration[:hostvars]
     ansible.groups = ansible_configuration[:groups]
   end # end provision

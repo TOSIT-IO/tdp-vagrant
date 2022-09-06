@@ -1,6 +1,6 @@
 ---
 # Run "vagrant reload" when box is modified
-box: centos/7
+box: generic/centos7
 
 # network domain
 domain: tdp

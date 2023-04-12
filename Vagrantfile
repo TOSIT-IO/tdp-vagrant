@@ -52,6 +52,7 @@ Vagrant.configure("2") do |config|
       cfg.vm.provider :libvirt do |libvirt|
         libvirt.cpus = cpus
         libvirt.memory = memory
+        libvirt.qemu_use_session = false
       end # end provider libvirt
     end # end define
   end # end settings

@@ -1,0 +1,39 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+---
+- name: Copy inventory files
+  copy: 
+    src:  "{{ playbook_dir }}/../.vagrant"
+    dest: "{{ project_dir }}"
+    mode: "600"
+
+- name: Template hosts.ini file
+  template:
+    src: inventory.j2
+    dest: "{{ project_dir }}/inventory/hosts.ini"
+
+- name: Create list from inventory
+  set_fact:
+    etc_hosts_inventory_block: |-
+      {% for host, vars in hostvars.items() -%}
+      {% if 'ip' in vars -%}
+      {{ vars['ip'] }}
+      {%- if ('ansible_hostname' in vars and host != vars['ansible_hostname']) %} {{ vars['ansible_hostname'] }}.{{ domain }} {{ vars['ansible_hostname'] }}.{{ domain }}. {{ vars['ansible_hostname'] }}{% endif %} {{ host }}.{{ domain }} {{ host }}.{{ domain }}. {{ host }}
+      {% endif %}
+      {% endfor %}
+  delegate_to: localhost
+  connection: local
+  delegate_facts: true
+  run_once: true
+
+- name: Populate inventory into hosts file
+  become: true
+  blockinfile:
+    path: /etc/hosts
+    block: "{{ hostvars.localhost.etc_hosts_inventory_block }}"
+    state: present
+    create: yes
+    backup: yes
+    unsafe_writes: yes
+    marker: "# Ansible inventory hosts {mark}"
+

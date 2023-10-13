@@ -1,0 +1,18 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+---
+- name: Ensure {{ project_dir }} exists
+  become: true
+  file:
+    path: "{{ project_dir }}"
+    state: directory
+    owner: vagrant
+    group: vagrant
+
+- name: Clone {{ git_project_url }}
+  git:
+    repo: "{{ git_project_url }}"
+    dest: "{{ project_dir }}"
+    version: "{{ git_project_version }}"
+    recursive: false
+    force: true

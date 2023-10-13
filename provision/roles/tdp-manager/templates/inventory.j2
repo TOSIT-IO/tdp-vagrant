@@ -1,0 +1,19 @@
+{% set exclude_group = 'tdp-manager' %}
+
+{% for host, vars in hostvars.items() %}
+{% if host not in groups[exclude_group] %}
+{{ host }} ansible_ssh_user='vagrant' ansible_ssh_private_key_file='{{ project_dir }}/.vagrant/machines/{{ host }}/virtualbox/private_key' ip={{ vars.ip }} domain={{ vars.domain }}
+{% endif %}
+{% endfor %}
+
+{% for group in groups %}
+{% if group != exclude_group %}
+[{{ group }}]
+{% for host in groups[group] %}
+{% if host not in groups[exclude_group] %}
+{{ host }}
+{% endif %}
+{% endfor %}
+
+{% endif %}
+{% endfor %}

@@ -1,9 +1,0 @@
----
-- hosts: all
-  become: yes
-  tasks:
-    - name: Remove hostname configuration on loopback interface
-      lineinfile:
-        path: /etc/hosts
-        regexp: '^127\.0\.1\.1'
-        line: ""

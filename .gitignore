@@ -1,0 +1,6 @@
+.vagrant/
+venv/
+pythonenv/
+.vscode/
+*.log
+.cache

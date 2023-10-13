@@ -1,0 +1,14 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+---
+- name: Remove hostname configuration on loopback interface
+  hosts: all
+  become: yes
+  roles:
+    - name: common
+
+- name: Setup TDP manger
+  hosts: tdp-manager
+  roles:
+    - name: tdp-manager
+      when: tdp_manager_enabled

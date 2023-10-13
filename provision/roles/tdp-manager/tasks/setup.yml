@@ -1,0 +1,17 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+---
+- name: Launch setup.sh script
+  shell: |
+    export PYTHON_BIN="{{ python_bin }}"
+    ./scripts/setup.sh -e {{ features | join(' -e ') }} -r {{ features_version }}
+  args:
+    chdir: "{{ project_dir }}"
+
+- name: Setup collection observability
+  shell: |
+    source ./venv/bin/activate && source ./.env
+    ./ansible_collections/tosit/tdp_observability/scripts/setup.sh -c
+  args:
+    chdir: "{{ project_dir }}"
+  when: "'observability' in features"

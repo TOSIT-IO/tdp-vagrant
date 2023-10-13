@@ -1,0 +1,14 @@
+[Unit]
+Description=TDP UI
+After=tdp-server.service
+
+[Service]
+User=vagrant
+WorkingDirectory={{ project_dir }}
+Type=simple
+ExecStart=npm --prefix ./tdp-ui run dev
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

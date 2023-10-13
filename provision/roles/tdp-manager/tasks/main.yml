@@ -1,0 +1,16 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+---
+- import_tasks: system.yml
+
+- import_tasks: git.yml
+
+- import_tasks: setup.yml
+
+- import_tasks: inventory.yml
+
+- import_tasks: tdp-server.yml
+  when: "'server' in features"
+
+- import_tasks: tdp-ui.yml
+  when: "'ui' in features"

@@ -1,0 +1,17 @@
+[Unit]
+Description=TDP server
+
+[Service]
+User=vagrant
+WorkingDirectory={{ project_dir }}
+EnvironmentFile=/etc/sysconfig/tdp-server
+Environment=PATH={{ project_dir }}/venv/bin:/home/vagrant/.local/bin:/home/vagrant/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
+# Workaround to fix https://github.com/TOSIT-IO/tdp-collection/issues/781
+Environment=PWD=.
+Type=simple
+ExecStart={{ project_dir }}/venv/bin/uvicorn tdp_server.main:app --reload --host 0.0.0.0
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

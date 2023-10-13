@@ -1,0 +1,47 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+---
+- name: Install system requirements
+  become: true
+  yum:
+    name:
+      - git
+      - unzip
+      - python39
+      - jq
+    state: present
+
+- name: Ensure {{ python_bin }} pip is up to date
+  become: true
+  pip:
+    name: pip
+    executable: pip3
+    state: latest
+
+- name: Remove existing nodejs
+  become: yes
+  yum:
+    name: nodejs
+    state: absent
+  when: "'ui' in features"
+
+- name: Install Node.js v18.x
+  become: true
+  shell: |
+    yum install https://rpm.nodesource.com/pub_18.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y &&
+    yum install nodejs -y --setopt=nodesource-nodejs.module_hotfixes=1
+  when: "'ui' in features"
+
+- name: Check if firewalld is installed
+  become: true
+  yum:
+    list: installed
+  register: yum_installed
+
+- name: Stop and disable firewalld
+  become: true
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+  when: "'firewalld' in (yum_installed.results | map(attribute='name'))"

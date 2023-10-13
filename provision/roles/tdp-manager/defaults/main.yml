@@ -1,0 +1,12 @@
+---
+project_dir: /opt/tdp/tdp-getting-started
+git_project_url: https://github.com/TOSIT-IO/tdp-getting-started.git
+git_project_version: 0.1
+python_bin: python3.6
+features_version: stable
+features:
+  - server
+  - ui
+  - prerequisites
+  - extras
+  # - observability

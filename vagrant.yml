@@ -2,6 +2,9 @@
 # Run "vagrant reload" when box is modified
 box: generic/rocky8
 
+# Add VM for TDP Manager
+tdp_manager_enabled: true
+
 # network domain
 domain: tdp
 
@@ -51,4 +54,12 @@ hosts:
       - worker
     hostname: worker-03
     ip: 192.168.56.16
+    memory: 2048
+
+tdp_manager_host:
+  - cpus: 2
+    groups:
+      -  tdp-manager
+    hostname: tdp-manager
+    ip: 192.168.56.17
     memory: 2048

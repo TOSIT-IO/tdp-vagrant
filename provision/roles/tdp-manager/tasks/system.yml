@@ -19,17 +19,37 @@
     state: latest
 
 - name: Remove existing nodejs
-  become: yes
+  become: true
   yum:
     name: nodejs
     state: absent
   when: "'ui' in features"
 
-- name: Install Node.js v18.x
+- name: Download Node.js package
   become: true
-  shell: |
-    yum install https://rpm.nodesource.com/pub_18.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y &&
-    yum install nodejs -y --setopt=nodesource-nodejs.module_hotfixes=1
+  get_url:
+    url: https://nodejs.org/dist/v18.18.1/node-v18.18.1-linux-x64.tar.xz
+    dest: /tmp/node-v18.18.1-linux-x64.tar.xz
+  when: "'ui' in features"
+
+- name: Extract Node.js package
+  become: true
+  unarchive:
+    src: /tmp/node-v18.18.1-linux-x64.tar.xz
+    dest: /opt
+    remote_src: true
+  when: "'ui' in features"
+
+- name: Create symlink for /usr/bin/node, /usr/bin/npm, and /usr/bin/npx
+  become: true
+  file:
+    src: "/opt/node-v18.18.1-linux-x64/bin/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    state: link
+  loop:
+    - node
+    - npm
+    - npx
   when: "'ui' in features"
 
 - name: Check if firewalld is installed

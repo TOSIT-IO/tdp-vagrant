@@ -1,6 +1,6 @@
 ---
 # Run "vagrant reload" when box is modified
-box: generic/rocky8
+box: generic/alma8
 
 # network domain
 domain: tdp

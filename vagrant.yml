@@ -33,7 +33,7 @@ hosts:
       - master3
     hostname: master-03
     ip: 192.168.56.13
-    memory: 3072
+    memory: 5120
   - cpus: 2
     groups:
       - worker

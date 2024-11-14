@@ -44,20 +44,21 @@ Vagrant.configure("2") do |config|
       cfg.vm.hostname = hostname
       cfg.vm.network "private_network", ip: ip
 
-      cfg.vm.provider :virtualbox do |vb|
-        vb.name = hostname # sets gui name for VM
-        vb.customize ["modifyvm", :id, "--memory", memory, "--cpus", cpus, "--hwvirtex", "on"]
-      end # end provider virtualbox
-
       cfg.vm.provider :libvirt do |libvirt|
         libvirt.cpus = cpus
         libvirt.memory = memory
         libvirt.qemu_use_session = false
       end # end provider libvirt
+
+      cfg.vm.provider :virtualbox do |vb|
+        vb.name = hostname # sets gui name for VM
+        vb.customize ["modifyvm", :id, "--memory", memory, "--cpus", cpus, "--hwvirtex", "on"]
+      end # end provider virtualbox
     end # end define
   end # end settings
 
   config.vm.provision :ansible do |ansible|
+    ansible.compatibility_mode = "2.0"
     ansible.playbook = "#{vagrantfile_dir}/provision.yml"
     ansible.host_vars = ansible_configuration[:hostvars]
     ansible.groups = ansible_configuration[:groups]

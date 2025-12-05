@@ -10,6 +10,7 @@ hosts:
   - cpus: 2
     groups:
       - edge
+      - edge1
     hostname: edge-01
     ip: 192.168.56.10
     memory: 2048
